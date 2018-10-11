@@ -1,0 +1,183 @@
+/* frame*/
+
+@media screen and (min-width: 525px) {
+    .ftr-frame {
+        margin: auto;
+        width: 400px;
+        padding: 5%;
+        align-items: center;
+    }
+}
+
+@media screen and (max-width: 525px) {
+    .ftr-frame {
+        margin: auto;
+        padding: 10%;
+    }
+}
+
+.ftr-plus {
+    position: fixed;
+    bottom: 10%;
+    right: 10%;
+}
+
+.ftr-footer {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    width: 100%;
+    z-index: 1001;
+}
+
+
+/* caixa */
+
+#caixa_tab {
+    margin: auto;
+}
+
+#caixa_tab tbody tr {
+    cursor: pointer;
+}
+
+
+/* detalhes do pedido */
+
+#detped_cliente {
+    font-size: 2.5em;
+    font-weight: 800;
+}
+
+#detped_numped {
+    font-size: 1.8em;
+    font-weight: 500;
+}
+
+#detped_tab {
+    margin: auto;
+}
+
+
+/* fechar pedido */
+
+#fecped_pag input{
+    margin: auto;
+}
+
+
+/* incluir pedido */
+
+#incped_prods .ftr-prod div{
+    background-color: rgb(233, 113, 34);
+}
+
+#incped_prods .ftr-prod .thumbnail{
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+}
+
+#incped_prods .ftr-prod .caption{
+    border-bottom-left-radius: 20px;
+    border-bottom-right-radius: 20px;
+}
+
+#incped_prods .ftr-img {
+    border-radius: 15%;
+    width: 90%;
+    margin: auto;
+}
+
+#incped_prods .ftr-preco {
+    border-radius: 15%;
+    width: 90%;
+    margin: auto;
+}
+
+@media screen and (max-width: 525px){
+    #incped_prods .ftr-img {
+        width: 80%;
+        margin: auto;
+    }
+
+    #incped_prods .ftr-preco {
+        border-radius: 15%;
+        width: 80%;
+        margin: auto;
+    }
+}
+
+
+/* incluir pedido quantidade */
+
+#incped_quant_f input{
+    margin: auto;
+}
+
+
+/* copa */
+
+#copa_peds a {
+    text-decoration: none;
+    color: black;
+}
+
+#copa_peds .ftr-ped {
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 0;
+    margin-top: 0;
+    border-radius: 30px;
+    background-color: blue;
+    max-width: 600px;
+    padding: 5px 0px;
+}
+
+#copa_peds .ftr-ped-num {
+    font-size: 2.5em;
+    font-weight: 900;
+}
+
+#copa_peds .ftr-ped-cli {
+    font-size: 2em;
+    font-weight: 600;
+}
+
+#copa_peds .ftr-ped-conc {
+    font-size: 1.7em;
+    font-weight: 200;
+}
+
+/* copa detalhes pedidos */
+
+#copa_detped {
+    padding: 0px 20px;
+}
+
+#copa_detped .ftr_ped{
+    background-color: blue;
+    border-radius: 15px;
+    margin: 5px;
+    padding: 0px 5px;
+    width: 100%;
+}
+
+#copa_detped .ftr_ped_pro{
+    font-size: 1.5em;
+    font-weight: 900;
+}
+
+#copa_detped .ftr_ped_qua{
+    font-size: 1.5em;  
+}
+
+#copa_detped .ftr_ped_sts{
+    font-size: 1.5em;
+    font-weight: 200;    
+}
+
+/* cozinha */
+
+#cozinha_peds .ftr_ped form{
+    padding: 10px;
+}
