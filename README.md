@@ -1,2 +1,2 @@
-# Food_Truck_app
-Aplicativo Food Truck
+# e_Pedidos_app
+Aplicativo e-Pedidos
