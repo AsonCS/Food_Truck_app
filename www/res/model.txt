@@ -1,0 +1,9 @@
+Login:
+- init: monta config, sobre, nome do app e descrição no sidebar.
+- valid_email: valida o e-mail quando o campo perde o foco, mostra senha se e-mail existir.
+- login: valida senha quando o botão é pressionado; se True vai pra tela ambientes, se False mostra mensagem de "Senha incorreta", se der False 5 vezes bloqueia e mostra mensagem para validação na tela de cadastro.
+- recover: envia pra tela de cadastro para validar
+
+Ambientes:
+- init: carrega módulos disponíveis, monta config, sobre, nome do usuário e função no sidebar.
+- out: finaliza sessão.
