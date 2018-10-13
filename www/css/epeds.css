@@ -188,3 +188,50 @@
 #cozinha_peds .ftr_ped form{
     padding: 10px;
 }
+
+
+/* copa view */
+
+#copaview_peds table {
+    margin: auto;
+}
+
+#copaview_peds .epeds_prod div{
+    background-color: rgb(233, 113, 34);
+    margin: 0px 10px;
+}
+
+#copaview_peds .epeds_prod .thumbnail{
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+}
+
+#copaview_peds .epeds_prod .caption{
+    border-bottom-left-radius: 20px;
+    border-bottom-right-radius: 20px;
+}
+
+#copaview_peds .epeds_img {
+    border-radius: 15%;
+    width: 90%;
+    margin: auto;
+}
+
+#copaview_peds .epeds_preco {
+    border-radius: 15%;
+    width: 90%;
+    margin: auto;
+}
+
+@media screen and (max-width: 525px){
+    #copaview_peds .epeds_img {
+        width: 80%;
+        margin: auto;
+    }
+
+    #copaview_peds .epeds_preco {
+        border-radius: 15%;
+        width: 80%;
+        margin: auto;
+    }
+}
