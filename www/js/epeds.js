@@ -1,9 +1,3 @@
-var formIntercept = (form, callback = (form) => {}) => {
-    callback(form);
-    form.reset();
-    return false;
-}
-
 var form_incped_quant_f = (incped_quant_f) => {
     alert('enviou pedido');
     history.back();
