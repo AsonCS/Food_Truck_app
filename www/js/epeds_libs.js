@@ -1,9 +1,45 @@
 
+/** 
+ * Obejetos de teste para modo debug
+ */
+var DEBUG_OBJ = {
+    A : {
+        email : "test",
+        valid_email : 1
+    },
+    B : {
+        email : "test",
+        valid_email : 1,
+        valid_senha: 1,
+        senha : "123",
+        tentativa: 4
+    },
+    C : {
+        email : "test",
+        nome : "Anderson",
+        func : "Operacional",
+        chave : "XXXX-XXXX"
+    }
+}
+
+var BASE_ROUTE = '';
+
+function getBaseRoute(){
+    if(typeof(localStorage.epedsBaseRoute) != 'string'){
+        localStorage.epedsBaseRoute = "http://127.0.0.1:3000/";
+        BASE_ROUTE = localStorage.epedsBaseRoute;
+    }else{
+        BASE_ROUTE = localStorage.epedsBaseRoute;
+    }
+}
+
+
 /**
  * 
  * @description Verifica se o debug está configurado na propriedade sessionStorage.epedsDebug.
  */
 function isDebug() { return typeof(sessionStorage.epedsDebug) == 'undefined' ? 0 : parseInt(sessionStorage.epedsDebug) }
+
 
 /**
  * 
@@ -20,7 +56,7 @@ function isLog() { return typeof(sessionStorage.epedsLog) == 'undefined' ? 0 : p
 function putLog(log, TAG = '') {
     if(isLog()){
         if(typeof(log) == 'string' || typeof(log) == 'number'){
-            log = TAG.length > 0 ? TAG + ': ' + log : log;
+            log = typeof(TAG) == 'string' && TAG.length > 0 ? TAG + ': ' + log : log;
             console.log(log);
         }
     }
@@ -35,22 +71,10 @@ function putLog(log, TAG = '') {
 function putLogErro(log, TAG = '') {
     if(isLog()){
         if(typeof(log) == 'string' || typeof(log) == 'number'){
-            log = TAG.length > 0 ? TAG + ': ' + log : log;
+            log = typeof(TAG) == 'string' && TAG.length > 0 ? TAG + ': ' + log : log;
             console.error(log);
         }
     }
-}
-
-/**
- * 
- * @description Intercepta o submit de um formulário.
- * @param {HTMLFormElement} form Formulario para ser interceptado.
- * @param {Function} callback Função para executar depois de interromper o submit, recebe (form: HTMLFormElement) como parametro.
- */
-function formIntercept (form, callback = (form) => {}){
-    callback(form);
-    form.reset();
-    return false;
 }
 
 /**
@@ -73,7 +97,7 @@ class ClienteAPI {
      * @description Configura rota e inicia atributos.
      */
     constructor(){
-        this.route = 'api/';
+        this.route = BASE_ROUTE + 'api/';
         this.ajaxObj = {};
         this.obj_debug = {};
         this.TAG = 'ClienteAPI';
@@ -100,16 +124,11 @@ class ClienteAPI {
      */
     post() {
         if(typeof(this.ajaxObj.data) == 'object'){
-            if(isLog()){
-                this.ajaxObj.success_callback = (data, textStatus, jqXHR) => {
-                    putLog('response: ' + JSON.stringify(data), this.TAG);
-                    this.ajaxObj.success_callback(data, textStatus, jqXHR);
-                }
-            }
-            putLog(JSON.stringify(this.ajaxObj.data) + '\n' + this.ajaxObj.type + '\n' + this.ajaxObj.url, this.TAG);
+            putLog('post obj: ' + JSON.stringify(this.ajaxObj.data) + '\n' + this.ajaxObj.type + '\n' + this.route + this.ajaxObj.url, this.TAG);
             if(isDebug()){
-                this.success_callback(this.obj_debug, 'debug', null);
+                this.ajaxObj.success_callback(this.ajaxObj.obj_debug, 'debug', null);
             }else{
+                putLog('post server', this.TAG);
                 $.ajax(this.ajaxObj);
             }
         }else{
@@ -135,11 +154,15 @@ class ClienteAPI {
  * @extends {ClienteAPI}
  * @property {constructor} constructor   - Configura rota e inicia atributos.
  * @property {string} route              - Default: 'api/login/' Rota para a API do servidor.
+ * @property {string} TAG                - 'RouteLogin'.
  * @property {Object} ajaxObj            - Default: '{}' Objeto com atributos e métodos necessários para envio por Ajax.
  * @property {Object} obj_debug          - Default: '{}' Retorno se debug ativo.
  * @property {Function} constructAjaxObj - Monta Objeto para Ajax.
  * @property {Function} post             - Envia dados para o servidor, executa log e debug se ativos.
  * @property {Function} setRoute         - Altera rota.
+ * @property {Function} emailValid       - Valida e-mail no servidor.
+ * @property {Function} login            - Valida e-mail e senha no servidor.
+ * @property {Function} rocover          - Envia rota recover para o servidor.
  */
 class RouteLogin extends ClienteAPI {
 
@@ -147,16 +170,17 @@ class RouteLogin extends ClienteAPI {
      * 
      * @description Configura rota e inicia super classe.
      */
-    constructor(route = ''){
+    constructor(){
         super();
         this.route += 'login/';
+        this.TAG = 'RouteLogin';
     }
 
     /**
      * 
      * @description Valida e-mail no servidor.
      * @param {!object} data Data para enviar para o servidor.
-     * @param {!function} success_callback Data para enviar para o servidor params: (data: Object).
+     * @param {!function} success_callback Função para executar se tiver sucesso params: (data: Object).
      */
     emailValid(data, success_callback){
         if(typeof(data) == 'object' && typeof(success_callback) == 'function'){
@@ -164,25 +188,76 @@ class RouteLogin extends ClienteAPI {
             this.ajaxObj = this.constructAjaxObj(this.ajaxObj);
             this.ajaxObj.url = 'emailvalid';
             this.ajaxObj.success_callback = (data, textStatus, jqXHR) => {
-                putLog('success', this.TAG);
+                putLog('emailValid response: ' + JSON.stringify(data), this.TAG);
                 success_callback(data);
             };
             this.ajaxObj.error_callback = (jqXHR, textStatus, errorThrown) => {
-                putLogErro('error', this.TAG);
+                putLogErro('emailValid error', this.TAG);
             };
-            if(isDebug()){
-                this.ajaxObj.obj_debug = {
-                    email : this.ajaxObj.data.email,
-                    valid_email : 1
-                };
-                putLog('debug', this.TAG);
-                success_callback(this.ajaxObj.obj_debug);
-            }else{
-                this.post();
-            }            
+            this.ajaxObj.obj_debug = DEBUG_OBJ.A;
+            this.post();
         }else{
-            putLogErro('error nos parametros', this.TAG);
+            putLogErro('emailValid error nos parametros', this.TAG);
         }
+    }
+
+    /**
+     * 
+     * @description Valida e-mail e senha no servidor.
+     * @param {!object} data Data para enviar para o servidor.
+     * @param {!function} success_callback Função para executar se tiver sucesso params: (data: Object).
+     */
+    login(data, success_callback){
+        if(typeof(data) == 'object' && typeof(success_callback) == 'function'){
+            this.ajaxObj.data = data;
+            this.ajaxObj = this.constructAjaxObj(this.ajaxObj);
+            this.ajaxObj.url = 'login';
+            this.ajaxObj.success_callback = (data, textStatus, jqXHR) => {
+                putLog('login response: ' + JSON.stringify(data), this.TAG);
+                success_callback(data);
+            };
+            this.ajaxObj.error_callback = (jqXHR, textStatus, errorThrown) => {
+                putLogErro('login error', this.TAG);
+            };
+            this.ajaxObj.obj_debug = DEBUG_OBJ.B;
+            this.post();           
+        }else{
+            putLogErro('login error nos parametros', this.TAG);
+        }
+    }
+
+    /**
+     * 
+     * @description Envia rota recover para o servidor.
+     * @param {!object} data Data para enviar para o servidor.
+     * @param {!function} success_callback Função para executar se tiver sucesso params: (data: Object).
+     */
+    rocover(data, success_callback){
+        if(typeof(data) == 'object' && typeof(success_callback) == 'function'){
+            this.ajaxObj.data = data;
+            this.ajaxObj = this.constructAjaxObj(this.ajaxObj);
+            this.ajaxObj.url = 'rocover';
+            this.ajaxObj.success_callback = (data, textStatus, jqXHR) => {
+                putLog('rocover response: ' + JSON.stringify(data), this.TAG);
+                success_callback(data);
+            };
+            this.ajaxObj.error_callback = (jqXHR, textStatus, errorThrown) => {
+                putLogErro('rocover error', this.TAG);
+            };
+            this.ajaxObj.obj_debug = DEBUG_OBJ.C;
+            this.post();         
+        }else{
+            putLogErro('rocover error nos parametros', this.TAG);
+        }
+    }
+
+    /**
+     * 
+     * @description Altera rota.
+     * @param {string} route Rota para a API do servidor.
+     */
+    setRoute(route){
+        this.route = 'api/login/' + route;
     }
 }
 
@@ -190,17 +265,24 @@ class RouteLogin extends ClienteAPI {
  * 
  * Rota da area de Cadastro para o servidor.
  * @type {RouteCadastro}
+ * @extends {ClienteAPI}
+ * @property {constructor} constructor   - Configura rota e inicia atributos.
+ * @property {string} route              - Default: 'api/cadastro/' Rota para a API do servidor.
+ * @property {string} TAG                - 'RouteLogin'.
+ * @property {Object} ajaxObj            - Default: '{}' Objeto com atributos e métodos necessários para envio por Ajax.
+ * @property {Object} obj_debug          - Default: '{}' Retorno se debug ativo.
+ * @property {Function} constructAjaxObj - Monta Objeto para Ajax.
+ * @property {Function} post             - Envia dados para o servidor, executa log e debug se ativos.
+ * @property {Function} setRoute         - Altera rota.
  */
 class RouteCadastro extends ClienteAPI {
 
     /**
      * 
-     * @param {string} route Rota para a API do servidor.
-     * @param {Object} ajaxObj Objeto com atributos e métodos necessários para envio por Ajax.
-     * @param {Object} obj_debug Retorno se debug ativo.
+     * @description Configura rota e inicia super classe.
      */
-    constructor(route = '', ajaxObj = {}, obj_debug = {}){
-        super('cadastro/' + route, ajaxObj, obj_debug);
+    constructor(){
+        super();
     }
 }
 
