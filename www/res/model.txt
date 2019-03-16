@@ -1,0 +1,54 @@
+Login:
+- init: monta config, sobre, nome do app e descrição no sidebar.
+- valid_email: valida o e-mail quando o campo perde o foco, mostra senha se e-mail existir.
+- login: valida senha quando o botão é pressionado; se True vai pra tela ambientes, se False mostra mensagem de "Senha incorreta", se der False 5 vezes bloqueia e mostra mensagem para validação na tela de cadastro.
+- recover: envia pra tela de cadastro para validar
+- { "app_name":"", "descricao":"", "config": { "url":"", "inv_color":"" }, "sobre":"" }
+- { "email":"" }
+- { "email":"", "valid_email":"" }
+- { "email":"", "valid_email":"", "senha":"",  "valid_senha":"",  "tentativa":"" }
+- { "email":"", "senha":"",  "tentativa":"" }
+
+Cadastro:
+- init: se vier de recover deixa email setado so leitura, se vier de alterar preencher tudo menos a senha, nesse caso habilitar senha antiga para mudar senha, ou então tudo zerado
+- valid_email: valida o e-mail quando o campo perde o foco, acusa se ja eistir.
+- gravar: grava no banco e retorna para tela de login.
+- update: grava em caso de recover ou alter.
+- { "email":"", "nome":"", "func":"",  "chave":"" }
+- { "email":"", "nome":"", "func":"",  "chave":"", "senha":"", "conf_senha":"" }
+- { "email":"", "nome":"", "func":"",  "chave":"", "senha":"", "conf_senha":"", "antig_senha":"" }
+
+Ambientes:
+- init: atualiza sessão, carrega módulos disponíveis, monta config, sobre, nome do usuário e função no sidebar.
+- out: finaliza sessão.
+- ambiente: envia tipo do ambiente para carregar dados da próxima tela
+- { "funcionario":"", "funcao":"", "ambientes": [ {"name":"caixa","attrs":["tipo":1] }, {"name":"copa","attrs":["tipo":2] }, {"name":"cozinha","attrs":["tipo":3] } ] }
+- { "tipo":"" }
+
+Caixa:
+- init: atualiza sessão, carrega clientes, carrega sidebar.
+- out: finaliza sessão
+- detped: envia o número do pedido para o servidor que devolve os detalhes na tela de detalhes do pedido.
+- { "pedidos": [ {"pedido":"0001", "cliente":"Anderson","andamento":"80"} ] }
+- { "pedido":"", "cliente":"" }
+
+Detped:
+- init: atualiza sessão, carrega produtos do pedido selecionado
+- incluir: requisita ao servidor lista atualizada de produtos para listar na tela de Incluir
+- fechar: requisita ao servidor o valor total da nota aplicando regras de negócio para preencher tela de Fechar
+- { "pedido":"0001", "cliente":"" , "produtos": [ {"nome":"", "preco":"", "quantidade":"", "status":""} ] }
+- { "pedido":"", "cliente":"" }
+
+Incluir:
+- init: atualiza sessão, carrega produtos todos os produtos cadastrados.
+- out: volta, descarta mudanças e atualiza a tela Detped.
+- incluir: manda o número do produto e a quantidade para o servidor incluir na nota, e volta e atualiza a tela Detped
+- { "pedido":"", "cliente":"", "produtos":[ { {"numero":"", "nome":"", "img":"", "preco":"", "descricao":"" } ] }
+- { "pedido":"", "cliente":"", "produtos":[ {"numero":"", "nome":"", "quantidade":"", "obs":"" } ] }
+
+Fechar:
+- init: atualiza sessão, carrega o valor total da nota.
+- out: volta, descarta mudanças e atualiza a tela Detped.
+- fechar: calcula o troco, e envia para o servidor concluir o pedido com status de pagamento efetuado, retorna para a tela de Caixa atualizada.
+- { "pedido":"", "cliente":"", "valortot":"" }
+- { "pedido":"", "cliente":"", "valortot":"", "valorpago":"" }

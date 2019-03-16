@@ -3,26 +3,28 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Food Truck</title>
+        <title>e-Pedidos</title>
 		<link rel="stylesheet" href="css/jquery_mobile/jquery.mobile-1.4.5.min.css" />
 		<link rel="stylesheet" href="css/bootstrap/bootstrap.min.css" />
-		<link rel="stylesheet" href="css/ftr.css" />
+        <link rel="stylesheet" href="css/epeds.css" />
 		<script type="text/javascript" src="js/jquery-1.9.1.min.js"></script>
         <script type="text/javascript" src="js/jquery_mobile/jquery.mobile-1.4.5.min.js"></script>
         <script type="text/javascript" src="js/bootstrap/bootstrap-4.1.3.min.js"></script>
         <script type="text/javascript" src="js/bootstrap/popper.min.js"></script>
-        <script type="text/javascript" src="js/ftr.js"></script>
+        <script type="text/javascript" src="js/epeds_libs.js"></script>
+        <script type="text/javascript" src="js/epeds.js"></script>
     </head>
-    <body style="text-align: center;">
+    <body style="text-align: center;" onload="initDOM()">
 
             <div data-role="page" id="login">
                 <div data-role="panel" data-display="overlay" class="ui-panel-inner ui-responsive-panel" id="login_sidebar">
+                    <h1>e-Pedidos</h1>
+                    <h3>Gerenciamento de pedidos.</h3>
+                    <br><br><br><br><br><br><br>
                     <ul data-role="listview" class="ui-listview">
-                        <li class="ui-first-child"><a href="#" class="ui-btn ui-btn-icon-right ui-icon-carat-r">Acura</a></li>
-                        <li><a href="#" class="ui-btn ui-btn-icon-right ui-icon-carat-r">Audi</a></li>
-                        <li><a href="#" class="ui-btn ui-btn-icon-right ui-icon-carat-r">BMW</a></li>
-                        <li><a href="#" class="ui-btn ui-btn-icon-right ui-icon-carat-r">Cadillac</a></li>
-                        <li class="ui-last-child"><a href="#" class="ui-btn ui-btn-icon-right ui-icon-carat-r">Ferrari</a></li>
+                        <li class="ui-first-child"><a href="#cadastro" data-rel="popup" data-position-to="window" data-transition="pop" class="ui-btn ui-btn-icon-right ui-icon-carat-r">Novo</a></li>
+                        <li><a href="#login_config" data-rel="popup" data-position-to="window" data-transition="pop" class="ui-btn ui-btn-icon-right ui-icon-carat-r">Config.</a></li>
+                        <li class="ui-last-child"><a href="#login_sobre" data-rel="popup" data-position-to="window" data-transition="pop" class="ui-btn ui-btn-icon-right ui-icon-carat-r">Sobre</a></li>
                     </ul>
                 </div>
                 <div data-role="header">
@@ -30,25 +32,41 @@
                     <h1 class="ui-title" role="heading" aria-level="1">Login</h1>
                 </div>
                 <div data-role="main" class="ui-content">
-                    <div class="ftr-frame">
+                    <div class="epeds_frame">
                         <br><br>
-                        <form id="login_form" action="#" method="POST">
-                            <label for="login_form_usu" class="ui-hidden-accessible">Usuário: </label>
-                            <input type="text" name="login_form_usu" id="login_form_usu" placeholder="Usuário" />
-                            <label for="login_form_sen" class="ui-hidden-accessible">Senha: </label>
-                            <input type="password" name="login_form_sen" id="login_form_sen" placeholder="Senha"/>
+                        <form id="login_form" action="#api/login/login" method="POST">
+                            <div>
+                                <label for="login_form_usu" class="ui-hidden-accessible">Usuário: </label>
+                                <input type="text" name="login_form_usu" id="login_form_usu" placeholder="Usuário" required/>
+                            </div>
+                            <div>
+                                <label for="login_form_sen" class="ui-hidden-accessible">Senha: </label>
+                                <input type="password" name="login_form_sen" id="login_form_sen" placeholder="Senha" required/>
+                            </div>
+                        <p><button type="submit" disabled id="login_form_btn" class="ui-nodisc-icon ui-alt-icon ui-btn-icon-right ui-btn ui-icon-arrow-r ui-btn-inline ui-btn-icon-notext">Login</button></p>
                         </form>
-                        <p><a href="#ambientes" class="ui-nodisc-icon ui-alt-icon ui-btn-icon-right ui-btn ui-icon-arrow-r ui-btn-inline" data-role="button" role="button">Login</a></p>
                         <p>
-                            <span hidden style="color: red">Usuário ou Senha incorretos...<br/><a href="#">Esqueceu a senha</a></span>
+                            <span hidden id="login_form_sen_inc" style="color: red">Senha incorreta...<br/><a href="#">Esqueceu a senha</a></span>
+                            <span hidden id="login_form_sen_ten" style="color: red">5 tentativas erradas<br/><a href="#">Recuperar</a></span>
                         </p>
                     </div>
-                    <div class="ftr-plus">
+                    <div class="epeds_plus">
                             <a href="#cadastro"><img src="img/plus-black.svg" height="200%" width="200%"/></a>
                     </div>
                 </div>      
-                <div data-role="footer" class="ftr-footer">
+                <div data-role="footer" class="epeds_footer">
                     <small>Powered By <b>AsonCS<sup>gsa</sup></b></small>
+                </div>
+                <div data-role="popup" id="login_sobre" class="ui-corner-all">
+                    <h1>e-Pedidos</h1>
+                    <h3>Gerenciamento de pedidos.</h3>
+                    <p>Gerenciamento de pedidos.</p>
+                </div>
+                <div data-role="popup" id="login_config" class="ui-corner-all">
+                    <h1>e-Pedidos</h1>
+                    <h3>Configurações</h3>
+                    <input type="text" id="login_config_url" />
+                    <button class="ui-btn" id="login_config_url_btn">set route</button>
                 </div>
             </div>
 
@@ -58,12 +76,16 @@
                     <h1 class="ui-title" role="heading" aria-level="1">Cadastro</h1>
                 </div>
                 <div data-role="main" class="ui-content">
-                    <div class="ftr-frame">
-                        <form id="cadastro_cad" onsubmit="return form_cadastro_cad(this)">
+                    <div class="epeds_frame">
+                        <form id="cadastro_cad">
                             <label for="cadastro_cad_nome" class="ui-hidden-accessible">Nome: </label>
                             <input type="text" name="cadastro_cad_nome" id="cadastro_cad_nome" placeholder="Nome completo" title="Nome completo" required/>
                             <label for="cadastro_cad_email" class="ui-hidden-accessible">E-mail: </label>
                             <input type="email" name="cadastro_cad_email" id="cadastro_cad_email" placeholder="E-mail" title="exemplo: abc@dfg.com" required/>
+                            <div id="cadastro_cad_senAnt" hidden>
+                                <label for="cadastro_cad_sen3" class="ui-hidden-accessible">Senha antiga: </label>
+                                <input type="password" name="cadastro_cad_sen3" id="cadastro_cad_sen3" placeholder="Senha antiga" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" title="8 números e letras minus./MAIUS."/>
+                            </div>
                             <label for="cadastro_cad_sen1" class="ui-hidden-accessible">Senha: </label>
                             <input type="password" name="cadastro_cad_sen1" id="cadastro_cad_sen1" placeholder="Senha" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" title="8 números e letras minus./MAIUS." required/>
                             <label for="cadastro_cad_sen2" class="ui-hidden-accessible">Confirme a senha: </label>
@@ -88,25 +110,37 @@
 
             <div data-role="page" id="ambientes">
                 <div data-role="panel" data-display="overlay" class="ui-panel-inner ui-responsive-panel" id="ambientes_sidebar">
-                    <ul data-role="listview" class="ui-listview">
-                        <li class="ui-first-child"><a href="#" class="ui-btn ui-btn-icon-right ui-icon-carat-r">Acura</a></li>
-                        <li><a href="#" class="ui-btn ui-btn-icon-right ui-icon-carat-r">Audi</a></li>
-                        <li><a href="#" class="ui-btn ui-btn-icon-right ui-icon-carat-r">BMW</a></li>
-                        <li><a href="#" class="ui-btn ui-btn-icon-right ui-icon-carat-r">Cadillac</a></li>
-                        <li class="ui-last-child"><a href="#" class="ui-btn ui-btn-icon-right ui-icon-carat-r">Ferrari</a></li>
-                    </ul>
+                        <h1>e-Pedidos</h1>
+                        <h3>Gerenciamento de pedidos.</h3>
+                        <br><br><br><br><br><br><br>
+                        <ul data-role="listview" class="ui-listview">
+                            <li class="ui-first-child"><a href="#sair" data-rel="back" class="ui-btn ui-btn-icon-right ui-icon-carat-r">Sair</a></li>
+                            <li><a href="#ambientes_sobre" class="ui-btn ui-btn-icon-right ui-icon-carat-r">Conta</a></li>
+                            <li><a href="#ambientes_config" data-rel="popup" data-position-to="window" data-transition="pop" class="ui-btn ui-btn-icon-right ui-icon-carat-r">Config.</a></li>
+                            <li class="ui-last-child"><a href="#ambientes_sobre" data-rel="popup" data-position-to="window" data-transition="pop" class="ui-btn ui-btn-icon-right ui-icon-carat-r">Sobre</a></li>
+                        </ul>
                 </div>           
-                <div data-role="header" class="ftr-header">
+                <div data-role="header" class="epeds_header">
                     <a href="#ambientes_sidebar" class="ui-nodisc-icon ui-alt-icon ui-btn-left ui-btn ui-icon-bars ui-btn-icon-notext">Menu</a>
                     <a href="#sair" data-rel="back" class="ui-nodisc-icon ui-alt-icon ui-btn-icon-right ui-btn ui-icon-delete ui-btn-icon-notext ui-corner-all">Sair</a>
                     <h1 class="ui-title" role="heading" aria-level="1">Ambientes</h1>
                 </div>
                 <div data-role="main" class="ui-content">
-                    <div class="ftr-frame">
+                    <div class="epeds_frame">
                         <a href="#caixa" class="ui-shadow ui-btn ui-corner-all">Caixa</a>
                         <a href="#copa" class="ui-shadow ui-btn ui-corner-all">Copa</a>
+                        <a href="#copaview" class="ui-shadow ui-btn ui-corner-all">Copa View</a>
                         <a href="#cozinha" class="ui-shadow ui-btn ui-corner-all">Cozinha</a>
                     </div>
+                </div>
+                <div data-role="popup" id="ambientes_sobre" class="ui-corner-all">
+                    <h1>e-Pedidos</h1>
+                    <h3>Gerenciamento de pedidos.</h3>
+                    <p>Gerenciamento de pedidos.</p>
+                </div>
+                <div data-role="popup" id="ambientes_config" class="ui-corner-all">
+                    <h1>e-Pedidos</h1>
+                    <h3>Configurações</h3>
                 </div>
             </div>
 
@@ -120,13 +154,13 @@
                         <li class="ui-last-child"><a href="#" class="ui-btn ui-btn-icon-right ui-icon-carat-r">Ferrari</a></li>
                     </ul>
                 </div>         
-                <div data-role="header" class="ftr-header">
+                <div data-role="header" class="epeds_header">
                     <a href="#caixa_sidebar" class="ui-nodisc-icon ui-alt-icon ui-btn-left ui-btn ui-icon-bars ui-btn-icon-notext">Menu</a>
                     <a href="#sair" data-rel="back" class="ui-nodisc-icon ui-alt-icon ui-btn-icon-right ui-btn ui-icon-delete ui-btn-icon-notext ui-corner-all">Sair</a>
                     <h1 class="ui-title" role="heading" aria-level="1">Caixa</h1>
                 </div>
                 <div data-role="main" class="ui-content">
-                    <div class="ftr-frame">
+                    <div class="epeds_frame">
                         <table id="caixa_tab">
                             <thead>
                                 <tr>
@@ -168,7 +202,7 @@
                     <h1 class="ui-title" role="heading" aria-level="1">Detalhes do Pedido</h1>
                 </div>
                 <div data-role="main" class="ui-content">
-                    <div class="ftr-frame">
+                    <div class="epeds_frame">
                         <div style="align-content: center">
                             <span id="detped_cliente">Cliente</span> &nbsp;&nbsp;&nbsp; <span id="detped_numped">Nº:0001</span>
                             <div data-role="controlgroup" data-type="horizontal" data-mini="true" data-inline="true">
@@ -224,8 +258,8 @@
                     <h1 class="ui-title" role="heading" aria-level="1">Fechar Pedido</h1>
                 </div>
                 <div data-role="main" class="ui-content">
-                    <div class="ftr-frame">
-                        <form id="fecped_pag" onsubmit="return form_fecped_pag(this)">
+                    <div class="epeds_frame">
+                        <form id="fecped_pag" onsubmit="return false">
                             <label for="fecped_pag_valtot">Valor total: R$</label>
                             <input type="text" name="fecped_pag_valtot" id="fecped_pag_valtot" readonly value="4,50"/>
                             <label for="fecped_pag_valpag">Valor pago: R$</label>
@@ -245,55 +279,55 @@
                 </div>
                 <div data-role="main" class="ui-content" id="incped_prods">
                     <div class="row">
-                        <div class="col-sm-6 col-md-4 col-lg-3 ftr-prod">
+                        <div class="col-sm-6 col-md-4 col-lg-3 epeds_prod">
                             <br>
                             <div class="thumbnail"> 
                                 <br>
                                 <a href="#incped_det" data-rel="popup" data-position-to="window" data-transition="pop">
-                                    <img src="img/hamburger.jpg" class="ftr-img" alt="Hamburger">
+                                    <img src="img/hamburger.jpg" class="epeds_img" alt="Hamburger">
                                 </a>
                             </div>
                             <div class="caption"> 
                                 <h3>Hamburger</h3>                                        
-                                <p class="ftr-preco"><a href="#incped_quant" data-rel="popup" data-position-to="window" data-transition="pop" class="ui-btn-icon-right ui-corner-all ui-btn ui-icon-bullets">R$ 6,50</a></p> 
+                                <p class="epeds_preco"><a href="#incped_quant" data-rel="popup" data-position-to="window" data-transition="pop" class="ui-btn-icon-right ui-corner-all ui-btn ui-icon-bullets">R$ 6,50</a></p> 
                                 <br>                                  
                             </div>
                         </div>
-                        <div class="col-sm-6 col-md-4 col-lg-3 ftr-prod">
+                        <div class="col-sm-6 col-md-4 col-lg-3 epeds_prod">
                             <br>
                             <div class="thumbnail"> 
                                 <br>
                                 <a href="#incped_det" data-rel="popup" data-position-to="window" data-transition="pop">
-                                    <img src="img/hamburger.jpg" class="ftr-img" alt="Hamburger">
+                                    <img src="img/hamburger.jpg" class="epeds_img" alt="Hamburger">
                                 </a> 
                             </div>
                             <div class="caption"> 
                                 <h3>Hamburger</h3>                                        
-                                <p class="ftr-preco"><a href="#incped_quant" data-rel="popup" data-position-to="window" data-transition="pop" class="ui-btn-icon-right ui-corner-all ui-btn ui-icon-bullets" role="button">R$ 6,50</a></p>  
+                                <p class="epeds_preco"><a href="#incped_quant" data-rel="popup" data-position-to="window" data-transition="pop" class="ui-btn-icon-right ui-corner-all ui-btn ui-icon-bullets" role="button">R$ 6,50</a></p>  
                                 <br>                                 
                             </div>
                         </div>
-                        <div class="col-sm-6 col-md-4 col-lg-3 ftr-prod">
+                        <div class="col-sm-6 col-md-4 col-lg-3 epeds_prod">
                             <br>
                             <div class="thumbnail"> 
                                 <br>
-                                <img src="img/hamburger.jpg" class="ftr-img" alt="Hamburger"> 
+                                <img src="img/hamburger.jpg" class="epeds_img" alt="Hamburger"> 
                             </div>
                             <div class="caption"> 
                                 <h3>Hamburger</h3>                                        
-                                <p class="ftr-preco"><a href="#" class="ui-btn-icon-right ui-corner-all ui-btn ui-icon-bullets" role="button">R$ 6,50</a></p> 
+                                <p class="epeds_preco"><a href="#" class="ui-btn-icon-right ui-corner-all ui-btn ui-icon-bullets" role="button">R$ 6,50</a></p> 
                                 <br>                                  
                             </div>
                         </div>
-                        <div class="col-sm-6 col-md-4 col-lg-3 ftr-prod">
+                        <div class="col-sm-6 col-md-4 col-lg-3 epeds_prod">
                             <br>
                             <div class="thumbnail"> 
                                 <br>
-                                <img src="img/hamburger.jpg" class="ftr-img" alt="Hamburger"> 
+                                <img src="img/hamburger.jpg" class="epeds_img" alt="Hamburger"> 
                             </div>
                             <div class="caption"> 
                                 <h3>Hamburger</h3>                                        
-                                <p class="ftr-preco"><a href="#" class="ui-btn-icon-right ui-corner-all ui-btn ui-icon-bullets" role="button">R$ 6,50</a></p> 
+                                <p class="epeds_preco"><a href="#" class="ui-btn-icon-right ui-corner-all ui-btn ui-icon-bullets" role="button">R$ 6,50</a></p> 
                                 <br>                                  
                             </div>
                         </div>
@@ -303,7 +337,7 @@
                     <a href="#" data-rel="back" class="ui-btn ui-corner-all ui-icon-delete ui-btn-icon-notext ui-btn-right">Close</a>
                     <h1>Hamburger</h1>
                     <h3>R$ 6,50</h3>
-                    <form id="incped_quant_f" onsubmit="return form_incped_quant_f(this)">
+                    <form id="incped_quant_f" onsubmit="return false">
                         <label for="incped_quant_f_qua" class="ui-hidden-accessible">Quantidade: </label>
                         <input type="number" name="incped_quant_f_qua" id="incped_quant_f_qua" placeholder="Quantidade" required>
                         <label for="incped_quant_f_tot" class="ui-hidden-accessible">Quantidade: </label>
@@ -329,7 +363,7 @@
                         <li class="ui-last-child"><a href="#" class="ui-btn ui-btn-icon-right ui-icon-carat-r">Ferrari</a></li>
                     </ul>
                 </div>         
-                <div data-role="header" class="ftr-header">
+                <div data-role="header" class="epeds_header">
                     <a href="#copa_sidebar" class="ui-nodisc-icon ui-alt-icon ui-btn-left ui-btn ui-icon-bars ui-btn-icon-notext">Menu</a>
                     <a href="#sair" data-rel="back" class="ui-nodisc-icon ui-alt-icon ui-btn-icon-right ui-btn ui-icon-delete ui-btn-icon-notext ui-corner-all">Sair</a>
                     <h1 class="ui-title" role="heading" aria-level="1">Copa</h1>
@@ -337,21 +371,21 @@
                 <div data-role="main" class="ui-content" id="copa_peds">
                     <div class="row">
                         <div class="col-sm-12 col-md-6 col-lg-6">
-                            <div class="ftr-ped">
+                            <div class="epeds_ped">
                                 <a href="#copa_detped" data-rel="popup" data-position-to="window" data-transition="pop"><p>
-                                    <span class="ftr-ped-num">0001</span>
-                                    <span class="ftr-ped-cli">Anderson</span>
-                                    <span class="ftr-ped-conc">80%</span>
+                                    <span class="epeds_ped-num">0001</span>
+                                    <span class="epeds_ped-cli">Anderson</span>
+                                    <span class="epeds_ped-conc">80%</span>
                                 </p></a>
                             </div>
                             <br>
                         </div>
                         <div class="col-sm-12 col-md-6 col-lg-6">
-                            <div class="ftr-ped">
+                            <div class="epeds_ped">
                                 <a href="#copa_detped" data-rel="popup" data-position-to="window" data-transition="pop"><p>
-                                    <span class="ftr-ped-num">0001</span>
-                                    <span class="ftr-ped-cli">Anderson</span>
-                                    <span class="ftr-ped-conc">80%</span>
+                                    <span class="epeds_ped-num">0001</span>
+                                    <span class="epeds_ped-cli">Anderson</span>
+                                    <span class="epeds_ped-conc">80%</span>
                                 </p></a>
                             </div>
                             <br>
@@ -359,29 +393,56 @@
                     </div>
                     <div class="row">
                         <div class="col-sm-12 col-md-6 col-lg-6">
-                            <div class="ftr-ped">
+                            <div class="epeds_ped">
                                 <a href="#copa_detped" data-rel="popup" data-position-to="window" data-transition="pop"><p>
-                                    <span class="ftr-ped-num">0001</span>
-                                    <span class="ftr-ped-cli">Anderson</span>
-                                    <span class="ftr-ped-conc">80%</span>
+                                    <span class="epeds_ped-num">0001</span>
+                                    <span class="epeds_ped-cli">Anderson</span>
+                                    <span class="epeds_ped-conc">80%</span>
                                 </p></a>
                             </div>
                             <br>
                         </div>
                         <div class="col-sm-12 col-md-6 col-lg-6">
-                            <div class="ftr-ped">
+                            <div class="epeds_ped">
                                 <a href="#copa_detped" data-rel="popup" data-position-to="window" data-transition="pop"><p>
-                                    <span class="ftr-ped-num">0001</span>
-                                    <span class="ftr-ped-cli">Anderson</span>
-                                    <span class="ftr-ped-conc">80%</span>
+                                    <span class="epeds_ped-num">0001</span>
+                                    <span class="epeds_ped-cli">Anderson</span>
+                                    <span class="epeds_ped-conc">80%</span>
                                 </p></a>
                             </div>
                             <br>
                         </div>
                     </div>
                 </div>
-                <div data-role="popup" id="copa_detped" class="ui-corner-all">
+                <div data-role="popup" id="copa_detped" class="ui-corner-all" style="overflow-y: auto;height: 400px;">
                     <h1>Anderson <small>Nº<sup>0001</sup></small></h1>
+                    <div class="row">
+                        <div class="ftr_ped">
+                            <p>
+                                <span class="ftr_ped_pro">Hamburguer</span><br>
+                                <span class="ftr_ped_qua">Qtd.º: <b>4</b></span>
+                                <span class="ftr_ped_sts">pendente</span>
+                            </p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="ftr_ped">
+                            <p>
+                                <span class="ftr_ped_pro">Hamburguer</span><br>
+                                <span class="ftr_ped_qua">Qtd.º: <b>4</b></span>
+                                <span class="ftr_ped_sts">pendente</span>
+                            </p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="ftr_ped">
+                            <p>
+                                <span class="ftr_ped_pro">Hamburguer</span><br>
+                                <span class="ftr_ped_qua">Qtd.º: <b>4</b></span>
+                                <span class="ftr_ped_sts">pendente</span>
+                            </p>
+                        </div>
+                    </div>
                     <div class="row">
                         <div class="ftr_ped">
                             <p>
@@ -422,7 +483,7 @@
                         <li class="ui-last-child"><a href="#" class="ui-btn ui-btn-icon-right ui-icon-carat-r">Ferrari</a></li>
                     </ul>
                 </div>         
-                <div data-role="header" class="ftr-header">
+                <div data-role="header" class="epeds_header">
                     <a href="#cozinha_sidebar" class="ui-nodisc-icon ui-alt-icon ui-btn-left ui-btn ui-icon-bars ui-btn-icon-notext">Menu</a>
                     <a href="#sair" data-rel="back" class="ui-nodisc-icon ui-alt-icon ui-btn-icon-right ui-btn ui-icon-delete ui-btn-icon-notext ui-corner-all">Sair</a>
                     <h1 class="ui-title" role="heading" aria-level="1">Cozinha</h1>
@@ -449,6 +510,263 @@
                         </div>
                     </div>
                 </div>                
+            </div>
+
+            <div data-role="page" id="copaview">
+                <div data-role="panel" data-display="overlay" class="ui-panel-inner ui-responsive-panel" id="copaview_sidebar">
+                    <ul data-role="listview" class="ui-listview">
+                        <li class="ui-first-child"><a href="#" class="ui-btn ui-btn-icon-right ui-icon-carat-r">Acura</a></li>
+                        <li><a href="#" class="ui-btn ui-btn-icon-right ui-icon-carat-r">Audi</a></li>
+                        <li><a href="#" class="ui-btn ui-btn-icon-right ui-icon-carat-r">BMW</a></li>
+                        <li><a href="#" class="ui-btn ui-btn-icon-right ui-icon-carat-r">Cadillac</a></li>
+                        <li class="ui-last-child"><a href="#" class="ui-btn ui-btn-icon-right ui-icon-carat-r">Ferrari</a></li>
+                    </ul>
+                </div>         
+                <div data-role="header" class="epeds_header">
+                    <a href="#copaview_sidebar" class="ui-nodisc-icon ui-alt-icon ui-btn-left ui-btn ui-icon-bars ui-btn-icon-notext">Menu</a>
+                    <a href="#sair" data-rel="back" class="ui-nodisc-icon ui-alt-icon ui-btn-icon-right ui-btn ui-icon-delete ui-btn-icon-notext ui-corner-all">Sair</a>
+                    <h1 class="ui-title" role="heading" aria-level="1">Copa View</h1>
+                </div>
+                <div data-role="main" class="ui-content" id="copaview_peds">
+                    <table>
+                        <tr>
+                            <td class="epeds_prod">
+                                <div class="thumbnail"> 
+                                    <br>
+                                    <a href="#copaview_det" data-rel="popup" data-position-to="window" data-transition="pop">
+                                        <img src="img/hamburger.jpg" class="epeds_img" alt="Hamburger">
+                                    </a>
+                                </div>
+                                <div class="caption"> 
+                                    <h3>Hamburger</h3>                                        
+                                    <p class="epeds_preco"><a href="#incped_quant" data-rel="popup" data-position-to="window" data-transition="pop" class="ui-btn-icon-right ui-corner-all ui-btn ui-icon-bullets">R$ 6,50</a></p> 
+                                    <br>                                  
+                                </div>
+                                <br>
+                            </td>
+                            <td class="epeds_prod">
+                                <div class="thumbnail"> 
+                                    <br>
+                                    <a href="#copaview_det" data-rel="popup" data-position-to="window" data-transition="pop">
+                                        <img src="img/hamburger.jpg" class="epeds_img" alt="Hamburger">
+                                    </a>
+                                </div>
+                                <div class="caption"> 
+                                    <h3>Hamburger</h3>                                        
+                                    <p class="epeds_preco"><a href="#incped_quant" data-rel="popup" data-position-to="window" data-transition="pop" class="ui-btn-icon-right ui-corner-all ui-btn ui-icon-bullets">R$ 6,50</a></p> 
+                                    <br>                                  
+                                </div>
+                                <br>
+                            </td>
+                            <td class="epeds_prod">
+                                <div class="thumbnail"> 
+                                    <br>
+                                    <a href="#copaview_det" data-rel="popup" data-position-to="window" data-transition="pop">
+                                        <img src="img/hamburger.jpg" class="epeds_img" alt="Hamburger">
+                                    </a>
+                                </div>
+                                <div class="caption"> 
+                                    <h3>Hamburger</h3>                                        
+                                    <p class="epeds_preco"><a href="#incped_quant" data-rel="popup" data-position-to="window" data-transition="pop" class="ui-btn-icon-right ui-corner-all ui-btn ui-icon-bullets">R$ 6,50</a></p> 
+                                    <br>                                  
+                                </div>
+                                <br>
+                            </td>
+                            <td class="epeds_prod">
+                                <div class="thumbnail"> 
+                                    <br>
+                                    <a href="#copaview_det" data-rel="popup" data-position-to="window" data-transition="pop">
+                                        <img src="img/hamburger.jpg" class="epeds_img" alt="Hamburger">
+                                    </a>
+                                </div>
+                                <div class="caption"> 
+                                    <h3>Hamburger</h3>                                        
+                                    <p class="epeds_preco"><a href="#incped_quant" data-rel="popup" data-position-to="window" data-transition="pop" class="ui-btn-icon-right ui-corner-all ui-btn ui-icon-bullets">R$ 6,50</a></p> 
+                                    <br>                                  
+                                </div>
+                                <br>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="epeds_prod">
+                                <div class="thumbnail"> 
+                                    <br>
+                                    <a href="#copaview_det" data-rel="popup" data-position-to="window" data-transition="pop">
+                                        <img src="img/hamburger.jpg" class="epeds_img" alt="Hamburger">
+                                    </a>
+                                </div>
+                                <div class="caption"> 
+                                    <h3>Hamburger</h3>                                        
+                                    <p class="epeds_preco"><a href="#incped_quant" data-rel="popup" data-position-to="window" data-transition="pop" class="ui-btn-icon-right ui-corner-all ui-btn ui-icon-bullets">R$ 6,50</a></p> 
+                                    <br>                                  
+                                </div>
+                                <br>
+                            </td>
+                            <td class="epeds_prod">
+                                <div class="thumbnail"> 
+                                    <br>
+                                    <a href="#copaview_det" data-rel="popup" data-position-to="window" data-transition="pop">
+                                        <img src="img/hamburger.jpg" class="epeds_img" alt="Hamburger">
+                                    </a>
+                                </div>
+                                <div class="caption"> 
+                                    <h3>Hamburger</h3>                                        
+                                    <p class="epeds_preco"><a href="#incped_quant" data-rel="popup" data-position-to="window" data-transition="pop" class="ui-btn-icon-right ui-corner-all ui-btn ui-icon-bullets">R$ 6,50</a></p> 
+                                    <br>                                  
+                                </div>
+                                <br>
+                            </td>
+                            <td class="epeds_prod">
+                                <div class="thumbnail"> 
+                                    <br>
+                                    <a href="#copaview_det" data-rel="popup" data-position-to="window" data-transition="pop">
+                                        <img src="img/hamburger.jpg" class="epeds_img" alt="Hamburger">
+                                    </a>
+                                </div>
+                                <div class="caption"> 
+                                    <h3>Hamburger</h3>                                        
+                                    <p class="epeds_preco"><a href="#incped_quant" data-rel="popup" data-position-to="window" data-transition="pop" class="ui-btn-icon-right ui-corner-all ui-btn ui-icon-bullets">R$ 6,50</a></p> 
+                                    <br>                                  
+                                </div>
+                                <br>
+                            </td>
+                            <td class="epeds_prod">
+                                <div class="thumbnail"> 
+                                    <br>
+                                    <a href="#copaview_det" data-rel="popup" data-position-to="window" data-transition="pop">
+                                        <img src="img/hamburger.jpg" class="epeds_img" alt="Hamburger">
+                                    </a>
+                                </div>
+                                <div class="caption"> 
+                                    <h3>Hamburger</h3>                                        
+                                    <p class="epeds_preco"><a href="#incped_quant" data-rel="popup" data-position-to="window" data-transition="pop" class="ui-btn-icon-right ui-corner-all ui-btn ui-icon-bullets">R$ 6,50</a></p> 
+                                    <br>                                  
+                                </div>
+                                <br>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="epeds_prod">
+                                <div class="thumbnail"> 
+                                    <br>
+                                    <a href="#copaview_det" data-rel="popup" data-position-to="window" data-transition="pop">
+                                        <img src="img/hamburger.jpg" class="epeds_img" alt="Hamburger">
+                                    </a>
+                                </div>
+                                <div class="caption"> 
+                                    <h3>Hamburger</h3>                                        
+                                    <p class="epeds_preco"><a href="#incped_quant" data-rel="popup" data-position-to="window" data-transition="pop" class="ui-btn-icon-right ui-corner-all ui-btn ui-icon-bullets">R$ 6,50</a></p> 
+                                    <br>                                  
+                                </div>
+                                <br>
+                            </td>
+                            <td class="epeds_prod">
+                                <div class="thumbnail"> 
+                                    <br>
+                                    <a href="#copaview_det" data-rel="popup" data-position-to="window" data-transition="pop">
+                                        <img src="img/hamburger.jpg" class="epeds_img" alt="Hamburger">
+                                    </a>
+                                </div>
+                                <div class="caption"> 
+                                    <h3>Hamburger</h3>                                        
+                                    <p class="epeds_preco"><a href="#incped_quant" data-rel="popup" data-position-to="window" data-transition="pop" class="ui-btn-icon-right ui-corner-all ui-btn ui-icon-bullets">R$ 6,50</a></p> 
+                                    <br>                                  
+                                </div>
+                                <br>
+                            </td>
+                            <td class="epeds_prod">
+                                <div class="thumbnail"> 
+                                    <br>
+                                    <a href="#copaview_det" data-rel="popup" data-position-to="window" data-transition="pop">
+                                        <img src="img/hamburger.jpg" class="epeds_img" alt="Hamburger">
+                                    </a>
+                                </div>
+                                <div class="caption"> 
+                                    <h3>Hamburger</h3>                                        
+                                    <p class="epeds_preco"><a href="#incped_quant" data-rel="popup" data-position-to="window" data-transition="pop" class="ui-btn-icon-right ui-corner-all ui-btn ui-icon-bullets">R$ 6,50</a></p> 
+                                    <br>                                  
+                                </div>
+                                <br>
+                            </td>
+                            <td class="epeds_prod">
+                                <div class="thumbnail"> 
+                                    <br>
+                                    <a href="#copaview_det" data-rel="popup" data-position-to="window" data-transition="pop">
+                                        <img src="img/hamburger.jpg" class="epeds_img" alt="Hamburger">
+                                    </a>
+                                </div>
+                                <div class="caption"> 
+                                    <h3>Hamburger</h3>                                        
+                                    <p class="epeds_preco"><a href="#incped_quant" data-rel="popup" data-position-to="window" data-transition="pop" class="ui-btn-icon-right ui-corner-all ui-btn ui-icon-bullets">R$ 6,50</a></p> 
+                                    <br>                                  
+                                </div>
+                                <br>
+                            </td>
+                        </tr>
+                    </table>
+                    <div data-role="popup" id="copaview_det" class="ui-corner-all">
+                        <h1>Hamburger</h1>
+                        <h3>R$ 6,50</h3>
+                        <p>Pão de gergilin com hamburguer, cheedar e bacon.</p>
+                    </div>
+                </div>
+                <div data-role="popup" id="copaview_detped" class="ui-corner-all" style="overflow-y: auto;height: 400px;">
+                    <h1>Anderson <small>Nº<sup>0001</sup></small></h1>
+                    <div class="row">
+                        <div class="ftr_ped">
+                            <p>
+                                <span class="ftr_ped_pro">Hamburguer</span><br>
+                                <span class="ftr_ped_qua">Qtd.º: <b>4</b></span>
+                                <span class="ftr_ped_sts">pendente</span>
+                            </p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="ftr_ped">
+                            <p>
+                                <span class="ftr_ped_pro">Hamburguer</span><br>
+                                <span class="ftr_ped_qua">Qtd.º: <b>4</b></span>
+                                <span class="ftr_ped_sts">pendente</span>
+                            </p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="ftr_ped">
+                            <p>
+                                <span class="ftr_ped_pro">Hamburguer</span><br>
+                                <span class="ftr_ped_qua">Qtd.º: <b>4</b></span>
+                                <span class="ftr_ped_sts">pendente</span>
+                            </p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="ftr_ped">
+                            <p>
+                                <span class="ftr_ped_pro">Hamburguer</span><br>
+                                <span class="ftr_ped_qua">Qtd.º: <b>4</b></span>
+                                <span class="ftr_ped_sts">pendente</span>
+                            </p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="ftr_ped">
+                            <p>
+                                <span class="ftr_ped_pro">Hamburguer</span><br>
+                                <span class="ftr_ped_qua">Qtd.º: <b>4</b></span>
+                                <span class="ftr_ped_sts">pendente</span>
+                            </p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="ftr_ped">
+                            <p>
+                                <span class="ftr_ped_pro">Hamburguer</span><br>
+                                <span class="ftr_ped_qua">Qtd.º: <b>4</b></span>
+                                <span class="ftr_ped_sts">pendente</span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
             </div>
 
     </body>

@@ -1,7 +1,14 @@
+/* todos */
+
+.epeds_none {
+    visibility: hidden;
+}
+
+
 /* frame*/
 
 @media screen and (min-width: 525px) {
-    .ftr-frame {
+    .epeds_frame {
         margin: auto;
         width: 400px;
         padding: 5%;
@@ -10,19 +17,19 @@
 }
 
 @media screen and (max-width: 525px) {
-    .ftr-frame {
+    .epeds_frame {
         margin: auto;
         padding: 10%;
     }
 }
 
-.ftr-plus {
+.epeds_plus {
     position: fixed;
     bottom: 10%;
     right: 10%;
 }
 
-.ftr-footer {
+.epeds_footer {
     position: fixed;
     bottom: 0;
     right: 0;
@@ -68,39 +75,39 @@
 
 /* incluir pedido */
 
-#incped_prods .ftr-prod div{
+#incped_prods .epeds_prod div{
     background-color: rgb(233, 113, 34);
 }
 
-#incped_prods .ftr-prod .thumbnail{
+#incped_prods .epeds_prod .thumbnail{
     border-top-left-radius: 20px;
     border-top-right-radius: 20px;
 }
 
-#incped_prods .ftr-prod .caption{
+#incped_prods .epeds_prod .caption{
     border-bottom-left-radius: 20px;
     border-bottom-right-radius: 20px;
 }
 
-#incped_prods .ftr-img {
+#incped_prods .epeds_img {
     border-radius: 15%;
     width: 90%;
     margin: auto;
 }
 
-#incped_prods .ftr-preco {
+#incped_prods .epeds_preco {
     border-radius: 15%;
     width: 90%;
     margin: auto;
 }
 
 @media screen and (max-width: 525px){
-    #incped_prods .ftr-img {
+    #incped_prods .epeds_img {
         width: 80%;
         margin: auto;
     }
 
-    #incped_prods .ftr-preco {
+    #incped_prods .epeds_preco {
         border-radius: 15%;
         width: 80%;
         margin: auto;
@@ -122,7 +129,7 @@
     color: black;
 }
 
-#copa_peds .ftr-ped {
+#copa_peds .epeds_ped {
     margin-left: auto;
     margin-right: auto;
     margin-bottom: 0;
@@ -133,17 +140,17 @@
     padding: 5px 0px;
 }
 
-#copa_peds .ftr-ped-num {
+#copa_peds .epeds_ped-num {
     font-size: 2.5em;
     font-weight: 900;
 }
 
-#copa_peds .ftr-ped-cli {
+#copa_peds .epeds_ped-cli {
     font-size: 2em;
     font-weight: 600;
 }
 
-#copa_peds .ftr-ped-conc {
+#copa_peds .epeds_ped-conc {
     font-size: 1.7em;
     font-weight: 200;
 }
@@ -180,4 +187,51 @@
 
 #cozinha_peds .ftr_ped form{
     padding: 10px;
+}
+
+
+/* copa view */
+
+#copaview_peds table {
+    margin: auto;
+}
+
+#copaview_peds .epeds_prod div{
+    background-color: rgb(233, 113, 34);
+    margin: 0px 10px;
+}
+
+#copaview_peds .epeds_prod .thumbnail{
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+}
+
+#copaview_peds .epeds_prod .caption{
+    border-bottom-left-radius: 20px;
+    border-bottom-right-radius: 20px;
+}
+
+#copaview_peds .epeds_img {
+    border-radius: 15%;
+    width: 90%;
+    margin: auto;
+}
+
+#copaview_peds .epeds_preco {
+    border-radius: 15%;
+    width: 90%;
+    margin: auto;
+}
+
+@media screen and (max-width: 525px){
+    #copaview_peds .epeds_img {
+        width: 80%;
+        margin: auto;
+    }
+
+    #copaview_peds .epeds_preco {
+        border-radius: 15%;
+        width: 80%;
+        margin: auto;
+    }
 }

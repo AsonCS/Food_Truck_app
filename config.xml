@@ -3,13 +3,13 @@
 <!-- config.xml reference: https://build.phonegap.com/docs/config-xml -->
 <widget xmlns     = "http://www.w3.org/ns/widgets"
         xmlns:gap = "http://phonegap.com/ns/1.0"
-        id        = "br.com.asoncsgsa.food-truck"
+        id        = "br.com.asoncsgsa.e-pedidos"
         version   = "1.0.0">
 
-    <name>Food Truck</name>
+    <name>e-Pedidos</name>
 
     <description>
-        Food Truck - Software of manegment orders. 
+        e-Pedidos - Software de gerenciamento de pedidos. 
     </description>
 
     <author href="https://github.com/AsonCS" email="acsgsa92@gmail.com">
