@@ -1,30 +1,31 @@
-var form_incped_quant_f = (incped_quant_f) => {
-    alert('enviou pedido');
-    history.back();
-}
-
-var form_fecped_pag = (fecped_pag) => {
-    alert('fechou pedido');
-    history.back();
-}
-
-var form_cadastro_cad = (cadastro_cad) => {
-    alert('usuario incluido');
-    history.back();
-}
+$(document).on('pagecontainerbeforeshow', (event, data) => {
+    switch (data.toPage.attr('id')){
+        case 'login' :
+            new Login();
+            break;
+        case 'cadastro' :
+            new Cadastro();
+            break;
+        case '' :
+            break;
+        case '' :
+            break;
+        case '' :
+            break;
+        case '' :
+            break;
+    }
+});
 
 function initDOM(){
     sessionStorage.epedsDebug = 1;
     sessionStorage.epedsLog = 1;
-    getBaseRoute();
-    document.getElementById('login_config_url').value = BASE_ROUTE;
-    document.getElementById('login_config_url_btn').onclick = (ev) => {
-        localStorage.epedsBaseRoute = BASE_ROUTE = document.getElementById('login_config_url').value;
-    };
-    new Login();
+    $('#login_config_url').val(getBaseRoute());
+    $('#login_config_url_btn').on('click', (ev) => {
+        localStorage.epedsBaseRoute = $('#login_config_url').val();
+    });
+    window.tests = new Tests();
 }
-
-
 
 
 /**
@@ -42,18 +43,10 @@ class Login {
         this.tentativa = 0;
         this.TAG = 'Login';
         this.routeLogin = new RouteLogin();
-        document.getElementById('login_form_usu').onblur = (ev) => {
-            this.emailValid(ev);
-        };
-        document.getElementById('login_form').onsubmit = (ev) => {
-            return this.login(ev);
-        };
-        document.getElementById('login_form_sen_inc').onclick = (ev) => {
-            this.rocover(ev);
-        };
-        document.getElementById('login_form_sen_ten').onclick = (ev) => {
-            this.rocover(ev);
-        };
+        $('#login_form_usu').on('blur', (ev) => { this.emailValid(ev) });
+        $('#login_form').on('submit', (ev) => { try { this.login(ev) }finally{ return false }});
+        $('#login_form_sen_inc').on('click', (ev) => { this.rocover(ev) });
+        $('#login_form_sen_ten').on('click', (ev) => { this.rocover(ev) });
     }
 
     /**
@@ -64,15 +57,15 @@ class Login {
     emailValid(ev){
         var obj = { email : document.getElementById('login_form_usu').value };
         this.routeLogin.emailValid(obj, (data) => {
-            putLog('emailValid: ' + data.valid_email, this.TAG);
+            tests.putLog('emailValid: ' + data.valid_email, this.TAG);
             if(parseInt(data.valid_email) == 1){
-                document.getElementById('login_form_btn').removeAttribute('disabled');
-                document.getElementById('login_form_sen_inc').setAttribute('hidden','hidden');
-                document.getElementById('login_form_sen_ten').setAttribute('hidden','hidden');
+                $('#login_form_btn').removeAttr('disabled');
+                $('#login_form_sen_inc').attr('hidden');
+                $('#login_form_sen_ten').attr('hidden');
             }else{
-                document.getElementById('login_form_btn').setAttribute('disabled','disabled');
-                document.getElementById('login_form_sen_inc').setAttribute('hidden','hidden');
-                document.getElementById('login_form_sen_ten').setAttribute('hidden','hidden');
+                $('#login_form_btn').attr('disabled');
+                $('#login_form_sen_inc').attr('hidden');
+                $('#login_form_sen_ten').attr('hidden');
             }
         });
     }
@@ -84,31 +77,31 @@ class Login {
      */
     login(ev){
         var obj = { 
-            email : document.getElementById('login_form_usu').value,
-            senha : document.getElementById('login_form_sen').value,
+            email : $('#login_form_usu').val(),
+            senha : $('#login_form_sen').val(),
             tentativa : this.tentativa
         };
         this.routeLogin.login(obj, (data) => {
             if(parseInt(data.valid_email) == 0){
-                document.getElementById('login_form_btn').setAttribute('disabled','disabled');
-                document.getElementById('login_form_sen_inc').setAttribute('hidden','hidden');
-                document.getElementById('login_form_sen_ten').setAttribute('hidden','hidden');
+                $('#login_form_btn').attr('disabled');
+                $('#login_form_sen_inc').attr('hidden');
+                $('#login_form_sen_ten').attr('hidden');
             }else if(parseInt(data.valid_senha) == 1){
+                $('#login_form').trigger( "reset" );
                 document.getElementById('login_form').reset();
-                putLog('efetuou login', this.TAG);
-                location += '#ambientes';
+                tests.putLog('efetuou login', this.TAG);
+                $.mobile.navigate('#ambientes');
             }else if(parseInt(data.valid_senha) == 0 && parseInt(data.tentativa) < 5){
-                putLog('emailSenha: ' + data.valid_senha + ', tentativa: ' + data.tentativa, this.TAG);
-                document.getElementById('login_form_sen_inc').removeAttribute('hidden');
-                document.getElementById('login_form_sen_ten').setAttribute('hidden','hidden');             
+                tests.putLog('emailSenha: ' + data.valid_senha + ', tentativa: ' + data.tentativa, this.TAG);
+                $('#login_form_sen_inc').removeAttr('hidden');
+                $('#login_form_sen_ten').attr('hidden');            
             }else{
-                putLog('emailSenha: ' + data.valid_senha + ', tentativa: ' + data.tentativa, this.TAG);
-                document.getElementById('login_form_btn').setAttribute('disabled','disabled');
-                document.getElementById('login_form_sen_inc').setAttribute('hidden','hidden');
-                document.getElementById('login_form_sen_ten').removeAttribute('hidden');
+                tests.putLog('emailSenha: ' + data.valid_senha + ', tentativa: ' + data.tentativa, this.TAG);
+                $('#login_form_btn').attr('disabled');
+                $('#login_form_sen_inc').attr('hidden');
+                $('#login_form_sen_ten').removeAttr('hidden');
             }
         });
-        return false;
     }
 
     /**
@@ -118,12 +111,92 @@ class Login {
      */
     rocover(ev){
         var obj = { 
-            email : document.getElementById('login_form_usu').value            
+            email : $('#login_form_usu').val()      
         };
         this.routeLogin.rocover(obj, (data) => {
-            putLog('rocover', this.TAG);
-            location += '#cadastro';
+            tests.putLog('rocover', this.TAG);
+            setBundle('cadastro-recover', data);
+            $.mobile.navigate('#cadastro');
         });
     }
 
+}
+
+
+/**
+ * 
+ * Objeto da tela Ambientes.
+ * @type {Ambientes}
+ */
+class Ambientes {
+
+    /**
+     * 
+     * @description Inicializa metodos da tela de Ambientes.
+     */
+    constructor(){
+    }
+}
+
+
+/**
+ * 
+ * Objeto da tela Cadastro.
+ * @type {Cadastro}
+ */
+class Cadastro {
+
+    /**
+     * 
+     * @description Inicializa metodos da tela de Cadastro.
+     */
+    constructor(){
+        this.TAG = 'Cadastro';
+        this.routeCadastro = new RouteCadastro();
+        $('#cadastro_cad').on('submit', (ev) => { try { }finally{ return false }});
+        var data = getBundle('cadastro-recover');
+        if(typeof(data) != 'undefined'){
+            tests.putLog('recover', this.TAG, data);
+            $('#cadastro_cad_nome').val(data.nome);
+            $('#cadastro_cad_email').val(data.email);
+            $('#cadastro_cad_chave').val(data.chave);
+            $('#cadastro_cad_nivel').val(data.func).selectmenu( "refresh" );
+        }else{
+            data = getBundle('cadastro-update');
+            if(typeof(data) != 'undefined'){
+                tests.putLog('update', this.TAG, data);
+                $('#cadastro_cad_nome').val(data.nome);
+                $('#cadastro_cad_email').val(data.email);
+                $('#cadastro_cad_chave').val(data.chave);
+                $('#cadastro_cad_nivel').val(data.func).selectmenu( "refresh" );
+                $('#cadastro_cad_senAnt').removeAttr('hidden');
+            }else{
+                tests.putLog('nao recover nem update', this.TAG);
+            }
+        }
+    }
+
+    /**
+     * 
+     * @description Valida e-mail no servidor.
+     */
+    emailValid(){
+        
+    }
+
+    /**
+     * 
+     * @description Grava usuário no servidor.
+     */
+    gravar(){
+        
+    }
+
+    /**
+     * 
+     * @description Atualiza usuário no servidor.
+     */
+    update(){
+        
+    }
 }

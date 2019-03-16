@@ -1,81 +1,148 @@
 
-/** 
- * Obejetos de teste para modo debug
- */
-var DEBUG_OBJ = {
-    A : {
-        email : "test",
-        valid_email : 1
-    },
-    B : {
-        email : "test",
-        valid_email : 1,
-        valid_senha: 1,
-        senha : "123",
-        tentativa: 4
-    },
-    C : {
-        email : "test",
-        nome : "Anderson",
-        func : "Operacional",
-        chave : "XXXX-XXXX"
-    }
-}
-
-var BASE_ROUTE = '';
-
 function getBaseRoute(){
-    if(typeof(localStorage.epedsBaseRoute) != 'string'){
-        localStorage.epedsBaseRoute = "http://127.0.0.1:3000/";
-        BASE_ROUTE = localStorage.epedsBaseRoute;
+    if(typeof(localStorage.epedsBaseRoute) != 'string' || localStorage.epedsBaseRoute == ''){
+        return localStorage.epedsBaseRoute = "http://127.0.0.1:3000/";
     }else{
-        BASE_ROUTE = localStorage.epedsBaseRoute;
+        return localStorage.epedsBaseRoute;
     }
+}
+
+var Bundle = [];
+
+function getBundle(key){
+    if(typeof(key) != 'string') return undefined;
+    return Bundle[key];
+}
+
+function setBundle(key, value){
+    if(typeof(key) != 'string') return false;
+    if(typeof(value) == 'undefined') return false;
+    Bundle[key] = value;
+    return true;
 }
 
 
 /**
  * 
- * @description Verifica se o debug está configurado na propriedade sessionStorage.epedsDebug.
+ * Objeto responsavel pelos testes de desenvolvimento
+ * @type {Tests}
+ * @property {constructor} constructor Verifica se o debug e log estão configurados nas propriedades de sessionStorage.
+ * @property {Function} routeDebug Simula respostas do servidor.
+ * @property {Function} isDebug Testa se Debug está ativo.
+ * @property {Function} isLog Testa se Log está ativo.
+ * @property {Function} putLog Função para gravar log.
+ * @property {Function} putLogErro Função para gravar log de erro.
  */
-function isDebug() { return typeof(sessionStorage.epedsDebug) == 'undefined' ? 0 : parseInt(sessionStorage.epedsDebug) }
+class Tests {
 
+    /**
+     * 
+     * @description Verifica se o debug e log estão configurados nas propriedades de sessionStorage.
+     */
+    constructor(){
+        this.epedsDebug = typeof(sessionStorage.epedsDebug) == 'undefined' ? 0 : parseInt(sessionStorage.epedsDebug);
+        this.epedsLog = typeof(sessionStorage.epedsLog) == 'undefined' ? 0 : parseInt(sessionStorage.epedsLog);
+    }
 
-/**
- * 
- * @description Verifica se o log está configurado na propriedade sessionStorage.epedsLog.
- */
-function isLog() { return typeof(sessionStorage.epedsLog) == 'undefined' ? 0 : parseInt(sessionStorage.epedsLog) }
-
-/**
- * 
- * @description função para gravar log.
- * @param {string} log Texto para ser gravado.
- * @param {string} TAG Tag para pesquisa, no formato 'TAG:'.
- */
-function putLog(log, TAG = '') {
-    if(isLog()){
-        if(typeof(log) == 'string' || typeof(log) == 'number'){
-            log = typeof(TAG) == 'string' && TAG.length > 0 ? TAG + ': ' + log : log;
-            console.log(log);
+    /**
+     * 
+     * @description Simula respostas do servidor.
+     * @param {object} obj Objeto que seria enviado para servidor
+     */
+    routeDebug(obj){
+        switch (obj.url){
+            case 'emailvalid':
+                obj.success_callback({
+                    email : "test",
+                    valid_email : 1
+                }, 'debug', null);
+                break;
+            case 'login':
+                obj.success_callback({
+                    email : "test",
+                    valid_email : 1,
+                    valid_senha: 0,
+                    senha : "123",
+                    tentativa: 6
+                }, 'debug', null);
+                break;
+            case 'rocover':
+                obj.success_callback({
+                    email : "test",
+                    nome : "Anderson",
+                    func : "OPRAC",
+                    chave : "XXXX-XXXX"
+                }, 'debug', null);
+                break;
+            case 'gravar':
+                obj.success_callback({}, 'debug', null);
+                break;
+            case 'update':
+                obj.success_callback({}, 'debug', null);
+                break;
+            case '':
+                obj.success_callback({}, 'debug', null);
+                break;
+            case '':
+                obj.success_callback({}, 'debug', null);
+                break;
+            case '':
+                obj.success_callback({}, 'debug', null);
+                break;
+            default:
+                obj.success_callback({}, 'debug', null);
         }
     }
-}
 
-/**
- * 
- * @description função para gravar log de erro.
- * @param {string} log Texto de erro para ser gravado.
- * @param {string} TAG Tag para pesquisa, no formato 'TAG:'.
- */
-function putLogErro(log, TAG = '') {
-    if(isLog()){
-        if(typeof(log) == 'string' || typeof(log) == 'number'){
-            log = typeof(TAG) == 'string' && TAG.length > 0 ? TAG + ': ' + log : log;
-            console.error(log);
+    /**
+     * 
+     * @description  Testa se Debug está ativo
+     * @returns {number} Retorna Debug ( 0 | 1 ).
+     */
+    isDebug(){ return this.epedsDebug; }
+
+    /**
+     * 
+     * @description  Testa se Log está ativo
+     * @returns {number} Retorna Log ( 0 | 1 ).
+     */
+    isLog() { return this.epedsDebug; }
+
+    /**
+     * 
+     * @description Função para gravar log.
+     * @param {string} log Texto para ser gravado.
+     * @param {string} TAG Tag para pesquisa, no formato 'TAG:'.
+     */
+    putLog(log, TAG = '', obj) {
+        if(this.epedsDebug){
+            if(typeof(log) == 'string' || typeof(log) == 'number'){
+                log = typeof(TAG) == 'string' && TAG.length > 0 ? TAG + ': ' + log : log;
+                if(typeof(obj) == 'object'){
+                    console.log(log,obj);
+                }else{
+                    console.log(log);
+                }
+            }
         }
     }
+
+    /**
+     * 
+     * @description Função para gravar log de erro.
+     * @param {string} log Texto de erro para ser gravado.
+     * @param {string} TAG Tag para pesquisa, no formato 'TAG:'.
+     */
+    putLogErro(log, TAG = '') {
+        //if(this.epedsDebug){
+            if(typeof(log) == 'string' || typeof(log) == 'number'){
+                log = typeof(TAG) == 'string' && TAG.length > 0 ? TAG + ': ' + log : log;
+                console.error(log);
+            }
+        //}
+    }
 }
+
 
 /**
  * 
@@ -85,8 +152,8 @@ function putLogErro(log, TAG = '') {
  * @property {string} route              - Default: 'api/' Rota para a API do servidor.
  * @property {string} TAG                - 'ClienteAPI'.
  * @property {Object} ajaxObj            - Default: '{}' Objeto com atributos e métodos necessários para envio por Ajax.
- * @property {Object} obj_debug          - Default: '{}' Retorno se debug ativo.
  * @property {Function} constructAjaxObj - Monta Objeto para Ajax.
+ * @property {Function} postPad          - Envio padrão para o servidor.
  * @property {Function} post             - Envia dados para o servidor, executa log e debug se ativos.
  * @property {Function} setRoute         - Altera rota.
  */
@@ -96,11 +163,10 @@ class ClienteAPI {
      * 
      * @description Configura rota e inicia atributos.
      */
-    constructor(){
-        this.route = BASE_ROUTE + 'api/';
+    constructor(route = '', TAG = 'ClienteAPI'){
+        this.baseRoute = this.route = getBaseRoute() + 'api/' + route;        
         this.ajaxObj = {};
-        this.obj_debug = {};
-        this.TAG = 'ClienteAPI';
+        this.TAG = TAG;
     }
 
     /**
@@ -117,6 +183,30 @@ class ClienteAPI {
         obj.error_callback = typeof(obj.error_callback) != 'function' ? (jqXHR, textStatus, errorThrown) => { } : obj.error_callback;
         return obj;
     }
+    
+    /**
+     * 
+     * @description Envio padrão para o servidor.
+     * @param {!object} data Data para enviar para o servidor.
+     * @param {!function} success_callback Função para executar se tiver sucesso params: (data: Object).
+     */
+    postPad(data, success_callback, route = ''){
+        if(typeof(data) == 'object' && typeof(success_callback) == 'function' && typeof(route) == 'string'){
+            this.ajaxObj.data = data;
+            this.ajaxObj = this.constructAjaxObj(this.ajaxObj);
+            this.ajaxObj.url = route;
+            this.ajaxObj.success_callback = (data, textStatus, jqXHR) => {
+                tests.putLog('postPad response', this.TAG, data);
+                success_callback(data);
+            };
+            this.ajaxObj.error_callback = (jqXHR, textStatus, errorThrown) => {
+                tests.putLogErro('postPad error', this.TAG);
+            };
+            this.post();
+        }else{
+            tests.putLogErro('postPad error nos parametros', this.TAG);
+        }
+    }
 
     /**
      * 
@@ -124,15 +214,14 @@ class ClienteAPI {
      */
     post() {
         if(typeof(this.ajaxObj.data) == 'object'){
-            putLog('post obj: ' + JSON.stringify(this.ajaxObj.data) + '\n' + this.ajaxObj.type + '\n' + this.route + this.ajaxObj.url, this.TAG);
-            if(isDebug()){
-                this.ajaxObj.success_callback(this.ajaxObj.obj_debug, 'debug', null);
+            tests.putLog('post', this.TAG, this.ajaxObj);
+            if(tests.isDebug()){
+                tests.routeDebug(this.ajaxObj);
             }else{
-                putLog('post server', this.TAG);
                 $.ajax(this.ajaxObj);
             }
         }else{
-            putLogErro('Objeto com data invalida.', this.TAG);
+            tests.putLogErro('Objeto com data invalida.', this.TAG);
         }
     }
 
@@ -142,10 +231,11 @@ class ClienteAPI {
      * @param {string} route Rota para a API do servidor.
      */
     setRoute(route){
-        this.route = 'api/' + route;
+        this.route = this.baseRoute + route;
     }
 
 }
+
 
 /**
  * 
@@ -156,10 +246,11 @@ class ClienteAPI {
  * @property {string} route              - Default: 'api/login/' Rota para a API do servidor.
  * @property {string} TAG                - 'RouteLogin'.
  * @property {Object} ajaxObj            - Default: '{}' Objeto com atributos e métodos necessários para envio por Ajax.
- * @property {Object} obj_debug          - Default: '{}' Retorno se debug ativo.
  * @property {Function} constructAjaxObj - Monta Objeto para Ajax.
+ * @property {Function} postPad          - Envio padrão para o servidor.
  * @property {Function} post             - Envia dados para o servidor, executa log e debug se ativos.
  * @property {Function} setRoute         - Altera rota.
+ * @property {Function} init             - Requisita informações da pagina no servidor.
  * @property {Function} emailValid       - Valida e-mail no servidor.
  * @property {Function} login            - Valida e-mail e senha no servidor.
  * @property {Function} rocover          - Envia rota recover para o servidor.
@@ -168,12 +259,20 @@ class RouteLogin extends ClienteAPI {
 
     /**
      * 
-     * @description Configura rota e inicia super classe.
+     * @description Configura rota e TAG no construtor da super classe.
      */
     constructor(){
-        super();
-        this.route += 'login/';
-        this.TAG = 'RouteLogin';
+        super('login/', 'RouteLogin');
+    }
+
+    /**
+     * 
+     * @description Requisita informações da pagina no servidor.
+     * @param {!object} data Data para enviar para o servidor.
+     * @param {!function} success_callback Função para executar se tiver sucesso params: (data: Object).
+     */
+    init(data, success_callback){
+        this.postPad(data, success_callback, 'init');
     }
 
     /**
@@ -183,22 +282,7 @@ class RouteLogin extends ClienteAPI {
      * @param {!function} success_callback Função para executar se tiver sucesso params: (data: Object).
      */
     emailValid(data, success_callback){
-        if(typeof(data) == 'object' && typeof(success_callback) == 'function'){
-            this.ajaxObj.data = data;
-            this.ajaxObj = this.constructAjaxObj(this.ajaxObj);
-            this.ajaxObj.url = 'emailvalid';
-            this.ajaxObj.success_callback = (data, textStatus, jqXHR) => {
-                putLog('emailValid response: ' + JSON.stringify(data), this.TAG);
-                success_callback(data);
-            };
-            this.ajaxObj.error_callback = (jqXHR, textStatus, errorThrown) => {
-                putLogErro('emailValid error', this.TAG);
-            };
-            this.ajaxObj.obj_debug = DEBUG_OBJ.A;
-            this.post();
-        }else{
-            putLogErro('emailValid error nos parametros', this.TAG);
-        }
+        this.postPad(data, success_callback, 'emailvalid');
     }
 
     /**
@@ -208,22 +292,7 @@ class RouteLogin extends ClienteAPI {
      * @param {!function} success_callback Função para executar se tiver sucesso params: (data: Object).
      */
     login(data, success_callback){
-        if(typeof(data) == 'object' && typeof(success_callback) == 'function'){
-            this.ajaxObj.data = data;
-            this.ajaxObj = this.constructAjaxObj(this.ajaxObj);
-            this.ajaxObj.url = 'login';
-            this.ajaxObj.success_callback = (data, textStatus, jqXHR) => {
-                putLog('login response: ' + JSON.stringify(data), this.TAG);
-                success_callback(data);
-            };
-            this.ajaxObj.error_callback = (jqXHR, textStatus, errorThrown) => {
-                putLogErro('login error', this.TAG);
-            };
-            this.ajaxObj.obj_debug = DEBUG_OBJ.B;
-            this.post();           
-        }else{
-            putLogErro('login error nos parametros', this.TAG);
-        }
+        this.postPad(data, success_callback, 'login');
     }
 
     /**
@@ -233,33 +302,10 @@ class RouteLogin extends ClienteAPI {
      * @param {!function} success_callback Função para executar se tiver sucesso params: (data: Object).
      */
     rocover(data, success_callback){
-        if(typeof(data) == 'object' && typeof(success_callback) == 'function'){
-            this.ajaxObj.data = data;
-            this.ajaxObj = this.constructAjaxObj(this.ajaxObj);
-            this.ajaxObj.url = 'rocover';
-            this.ajaxObj.success_callback = (data, textStatus, jqXHR) => {
-                putLog('rocover response: ' + JSON.stringify(data), this.TAG);
-                success_callback(data);
-            };
-            this.ajaxObj.error_callback = (jqXHR, textStatus, errorThrown) => {
-                putLogErro('rocover error', this.TAG);
-            };
-            this.ajaxObj.obj_debug = DEBUG_OBJ.C;
-            this.post();         
-        }else{
-            putLogErro('rocover error nos parametros', this.TAG);
-        }
-    }
-
-    /**
-     * 
-     * @description Altera rota.
-     * @param {string} route Rota para a API do servidor.
-     */
-    setRoute(route){
-        this.route = 'api/login/' + route;
+        this.postPad(data, success_callback, 'rocover');
     }
 }
+
 
 /**
  * 
@@ -267,93 +313,325 @@ class RouteLogin extends ClienteAPI {
  * @type {RouteCadastro}
  * @extends {ClienteAPI}
  * @property {constructor} constructor   - Configura rota e inicia atributos.
- * @property {string} route              - Default: 'api/cadastro/' Rota para a API do servidor.
- * @property {string} TAG                - 'RouteLogin'.
+ * @property {string} route              - Default: 'api/cadastros/' Rota para a API do servidor.
+ * @property {string} TAG                - 'ClienteAPI'.
  * @property {Object} ajaxObj            - Default: '{}' Objeto com atributos e métodos necessários para envio por Ajax.
- * @property {Object} obj_debug          - Default: '{}' Retorno se debug ativo.
  * @property {Function} constructAjaxObj - Monta Objeto para Ajax.
+ * @property {Function} postPad          - Envio padrão para o servidor.
  * @property {Function} post             - Envia dados para o servidor, executa log e debug se ativos.
  * @property {Function} setRoute         - Altera rota.
+ * @property {Function} init             - Requisita informações da pagina no servidor.
+ * @property {Function} emailValid       - Valida e-mail no servidor.
+ * @property {Function} gravar           - Grava usuário no servidor.
+ * @property {Function} update           - Atualiza usuário no servidor.
  */
 class RouteCadastro extends ClienteAPI {
 
     /**
      * 
-     * @description Configura rota e inicia super classe.
+     * @description Configura rota e TAG no construtor da super classe.
      */
     constructor(){
-        super();
+        super('cadastro/', 'RouteCadastro');
+    }
+
+    /**
+     * 
+     * @description Requisita informações da pagina no servidor.
+     * @param {!object} data Data para enviar para o servidor.
+     * @param {!function} success_callback Função para executar se tiver sucesso params: (data: Object).
+     */
+    init(data, success_callback){
+        this.postPad(data, success_callback, 'init');
+    }
+
+    /**
+     * 
+     * @description Valida e-mail no servidor.
+     * @param {!object} data Data para enviar para o servidor.
+     * @param {!function} success_callback Função para executar se tiver sucesso params: (data: Object).
+     */
+    emailValid(data, success_callback){
+        this.postPad(data, success_callback, 'emailvalid');
+    }
+
+    /**
+     * 
+     * @description Grava usuário no servidor.
+     * @param {!object} data Data para enviar para o servidor.
+     * @param {!function} success_callback Função para executar se tiver sucesso params: (data: Object).
+     */
+    gravar(data, success_callback){
+        this.postPad(data, success_callback, 'gravar');
+    }
+
+    /**
+     * 
+     * @description Atualiza usuário no servidor.
+     * @param {!object} data Data para enviar para o servidor.
+     * @param {!function} success_callback Função para executar se tiver sucesso params: (data: Object).
+     */
+    update(data, success_callback){
+        this.postPad(data, success_callback, 'update');
     }
 }
+
 
 /**
  * 
  * Rota da area de Ambientes para o servidor.
  * @type {RouteAmbientes}
+ * @extends {ClienteAPI}
+ * @property {constructor} constructor   - Configura rota e inicia atributos.
+ * @property {string} route              - Default: 'api/ambientes/' Rota para a API do servidor.
+ * @property {string} TAG                - 'ClienteAPI'.
+ * @property {Object} ajaxObj            - Default: '{}' Objeto com atributos e métodos necessários para envio por Ajax.
+ * @property {Function} constructAjaxObj - Monta Objeto para Ajax.
+ * @property {Function} postPad          - Envio padrão para o servidor.
+ * @property {Function} post             - Envia dados para o servidor, executa log e debug se ativos.
+ * @property {Function} setRoute         - Altera rota.
+ * @property {Function} init             - Requisita informações da pagina no servidor.
+ * @property {Function} out              - Encerra sessão no servidor.
+ * @property {Function} ambiente         - Redireciona ambiente no servidor.
  */
 class RouteAmbientes extends ClienteAPI {
 
     /**
      * 
-     * @param {string} route Rota para a API do servidor.
-     * @param {Object} ajaxObj Objeto com atributos e métodos necessários para envio por Ajax.
-     * @param {Object} obj_debug Retorno se debug ativo.
+     * @description Configura rota e TAG no construtor da super classe.
      */
-    constructor(route = '', ajaxObj = {}, obj_debug = {}){
-        super('ambientes/' + route, ajaxObj, obj_debug);
+    constructor(){
+        super('ambientes/', 'RouteAmbientes');
+    }
+
+    /**
+     * 
+     * @description Requisita informações da pagina no servidor.
+     * @param {!object} data Data para enviar para o servidor.
+     * @param {!function} success_callback Função para executar se tiver sucesso params: (data: Object).
+     */
+    init(data, success_callback){
+        this.postPad(data, success_callback, 'init');
+    }
+
+    /**
+     * 
+     * @description Encerra sessão no servidor.
+     * @param {!object} data Data para enviar para o servidor.
+     * @param {!function} success_callback Função para executar se tiver sucesso params: (data: Object).
+     */
+    out(data, success_callback){
+        this.postPad(data, success_callback, 'out');
+    }
+
+    /**
+     * 
+     * @description Redireciona ambiente no servidor.
+     * @param {!object} data Data para enviar para o servidor.
+     * @param {!function} success_callback Função para executar se tiver sucesso params: (data: Object).
+     */
+    ambiente(data, success_callback){
+        this.postPad(data, success_callback, 'ambiente');
     }
 }
+
 
 /**
  * 
  * Rota da area de Cozinha para o servidor.
  * @type {RouteCozinha}
+ * @extends {ClienteAPI}
+ * @property {constructor} constructor   - Configura rota e inicia atributos.
+ * @property {string} route              - Default: 'api/cadastros' Rota para a API do servidor.
+ * @property {string} TAG                - 'ClienteAPI'.
+ * @property {Object} ajaxObj            - Default: '{}' Objeto com atributos e métodos necessários para envio por Ajax.
+ * @property {Function} constructAjaxObj - Monta Objeto para Ajax.
+ * @property {Function} postPad          - Envio padrão para o servidor.
+ * @property {Function} post             - Envia dados para o servidor, executa log e debug se ativos.
+ * @property {Function} setRoute         - Altera rota.
+ * @property {Function} init             - Requisita informações da pagina no servidor.
  */
 class RouteCozinha extends ClienteAPI {
 
     /**
      * 
-     * @param {string} route Rota para a API do servidor.
-     * @param {Object} ajaxObj Objeto com atributos e métodos necessários para envio por Ajax.
-     * @param {Object} obj_debug Retorno se debug ativo.
+     * @description Configura rota e TAG no construtor da super classe.
      */
-    constructor(route = '', ajaxObj = {}, obj_debug = {}){
-        super('cozinha/' + route, ajaxObj, obj_debug);
+    constructor(){
+        super('/', '');
     }
 }
+
 
 /**
  * 
  * Rota da area de Copa para o servidor.
  * @type {RouteCopa}
+ * @extends {ClienteAPI}
+ * @property {constructor} constructor   - Configura rota e inicia atributos.
+ * @property {string} route              - Default: 'api/cadastros' Rota para a API do servidor.
+ * @property {string} TAG                - 'ClienteAPI'.
+ * @property {Object} ajaxObj            - Default: '{}' Objeto com atributos e métodos necessários para envio por Ajax.
+ * @property {Function} constructAjaxObj - Monta Objeto para Ajax.
+ * @property {Function} postPad          - Envio padrão para o servidor.
+ * @property {Function} post             - Envia dados para o servidor, executa log e debug se ativos.
+ * @property {Function} setRoute         - Altera rota.
+ * @property {Function} init             - Requisita informações da pagina no servidor.
  */
 class RouteCopa extends ClienteAPI {
 
     /**
      * 
-     * @param {string} route Rota para a API do servidor.
-     * @param {Object} ajaxObj Objeto com atributos e métodos necessários para envio por Ajax.
-     * @param {Object} obj_debug Retorno se debug ativo.
+     * @description Configura rota e TAG no construtor da super classe.
      */
-    constructor(route = '', ajaxObj = {}, obj_debug = {}){
-        super('copa/' + route, ajaxObj, obj_debug);
+    constructor(){
+        super('/', '');
     }
 }
+
 
 /**
  * 
  * Rota da area de Caixa para o servidor.
  * @type {RouteCaixa}
+ * @extends {ClienteAPI}
+ * @property {constructor} constructor   - Configura rota e inicia atributos.
+ * @property {string} route              - Default: 'api/caixa/' Rota para a API do servidor.
+ * @property {string} TAG                - 'ClienteAPI'.
+ * @property {Object} ajaxObj            - Default: '{}' Objeto com atributos e métodos necessários para envio por Ajax.
+ * @property {Function} constructAjaxObj - Monta Objeto para Ajax.
+ * @property {Function} postPad          - Envio padrão para o servidor.
+ * @property {Function} post             - Envia dados para o servidor, executa log e debug se ativos.
+ * @property {Function} setRoute         - Altera rota.
+ * @property {Function} init             - Requisita informações da pagina no servidor.
  */
 class RouteCaixa extends ClienteAPI {
 
     /**
      * 
-     * @param {string} route Rota para a API do servidor.
-     * @param {Object} ajaxObj Objeto com atributos e métodos necessários para envio por Ajax.
-     * @param {Object} obj_debug Retorno se debug ativo.
+     * @description Configura rota e TAG no construtor da super classe.
      */
-    constructor(route = '', ajaxObj = {}, obj_debug = {}){
-        super('caixa/' + route, ajaxObj, obj_debug);
+    constructor(){
+        super('caixa/', 'RouteCaixa');
+    }
+
+    /**
+     * 
+     * @description Requisita informações da pagina no servidor.
+     * @param {!object} data Data para enviar para o servidor.
+     * @param {!function} success_callback Função para executar se tiver sucesso params: (data: Object).
+     */
+    init(data, success_callback){
+        this.postPad(data, success_callback, 'init');
+    }
+
+    /**
+     * 
+     * @description Requisita informações da pagina no servidor.
+     * @param {!object} data Data para enviar para o servidor.
+     * @param {!function} success_callback Função para executar se tiver sucesso params: (data: Object).
+     */
+    init(data, success_callback){
+        this.postPad(data, success_callback, 'init');
+    }
+
+    /**
+     * 
+     * @description Requisita informações da pagina no servidor.
+     * @param {!object} data Data para enviar para o servidor.
+     * @param {!function} success_callback Função para executar se tiver sucesso params: (data: Object).
+     */
+    init(data, success_callback){
+        this.postPad(data, success_callback, 'init');
+    }
+
+    /**
+     * 
+     * @description Requisita informações da pagina no servidor.
+     * @param {!object} data Data para enviar para o servidor.
+     * @param {!function} success_callback Função para executar se tiver sucesso params: (data: Object).
+     */
+    init(data, success_callback){
+        this.postPad(data, success_callback, 'init');
+    }
+
+    /**
+     * 
+     * @description Requisita informações da pagina no servidor.
+     * @param {!object} data Data para enviar para o servidor.
+     * @param {!function} success_callback Função para executar se tiver sucesso params: (data: Object).
+     */
+    init(data, success_callback){
+        this.postPad(data, success_callback, 'init');
+    }
+
+    /**
+     * 
+     * @description Requisita informações da pagina no servidor.
+     * @param {!object} data Data para enviar para o servidor.
+     * @param {!function} success_callback Função para executar se tiver sucesso params: (data: Object).
+     */
+    init(data, success_callback){
+        this.postPad(data, success_callback, 'init');
+    }
+
+    /**
+     * 
+     * @description Requisita informações da pagina no servidor.
+     * @param {!object} data Data para enviar para o servidor.
+     * @param {!function} success_callback Função para executar se tiver sucesso params: (data: Object).
+     */
+    init(data, success_callback){
+        this.postPad(data, success_callback, 'init');
+    }
+
+    /**
+     * 
+     * @description Requisita informações da pagina no servidor.
+     * @param {!object} data Data para enviar para o servidor.
+     * @param {!function} success_callback Função para executar se tiver sucesso params: (data: Object).
+     */
+    init(data, success_callback){
+        this.postPad(data, success_callback, 'init');
+    }
+
+    /**
+     * 
+     * @description Requisita informações da pagina no servidor.
+     * @param {!object} data Data para enviar para o servidor.
+     * @param {!function} success_callback Função para executar se tiver sucesso params: (data: Object).
+     */
+    init(data, success_callback){
+        this.postPad(data, success_callback, 'init');
+    }
+
+    /**
+     * 
+     * @description Requisita informações da pagina no servidor.
+     * @param {!object} data Data para enviar para o servidor.
+     * @param {!function} success_callback Função para executar se tiver sucesso params: (data: Object).
+     */
+    init(data, success_callback){
+        this.postPad(data, success_callback, 'init');
+    }
+
+    /**
+     * 
+     * @description Requisita informações da pagina no servidor.
+     * @param {!object} data Data para enviar para o servidor.
+     * @param {!function} success_callback Função para executar se tiver sucesso params: (data: Object).
+     */
+    init(data, success_callback){
+        this.postPad(data, success_callback, 'init');
+    }
+
+    /**
+     * 
+     * @description Requisita informações da pagina no servidor.
+     * @param {!object} data Data para enviar para o servidor.
+     * @param {!function} success_callback Função para executar se tiver sucesso params: (data: Object).
+     */
+    init(data, success_callback){
+        this.postPad(data, success_callback, 'init');
     }
 }

@@ -11,7 +11,7 @@ Login:
 
 Cadastro:
 - init: se vier de recover deixa email setado so leitura, se vier de alterar preencher tudo menos a senha, nesse caso habilitar senha antiga para mudar senha, ou então tudo zerado
-- valid_email: valida o e-mail quando o campo perde o foco, mostra senha se e-mail existir.
+- valid_email: valida o e-mail quando o campo perde o foco, acusa se ja eistir.
 - gravar: grava no banco e retorna para tela de login.
 - update: grava em caso de recover ou alter.
 - { "email":"", "nome":"", "func":"",  "chave":"" }

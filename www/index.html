@@ -77,11 +77,15 @@
                 </div>
                 <div data-role="main" class="ui-content">
                     <div class="epeds_frame">
-                        <form id="cadastro_cad" onsubmit="return formIntercept(this, form_cadastro_cad)">
+                        <form id="cadastro_cad">
                             <label for="cadastro_cad_nome" class="ui-hidden-accessible">Nome: </label>
                             <input type="text" name="cadastro_cad_nome" id="cadastro_cad_nome" placeholder="Nome completo" title="Nome completo" required/>
                             <label for="cadastro_cad_email" class="ui-hidden-accessible">E-mail: </label>
                             <input type="email" name="cadastro_cad_email" id="cadastro_cad_email" placeholder="E-mail" title="exemplo: abc@dfg.com" required/>
+                            <div id="cadastro_cad_senAnt" hidden>
+                                <label for="cadastro_cad_sen3" class="ui-hidden-accessible">Senha antiga: </label>
+                                <input type="password" name="cadastro_cad_sen3" id="cadastro_cad_sen3" placeholder="Senha antiga" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" title="8 números e letras minus./MAIUS."/>
+                            </div>
                             <label for="cadastro_cad_sen1" class="ui-hidden-accessible">Senha: </label>
                             <input type="password" name="cadastro_cad_sen1" id="cadastro_cad_sen1" placeholder="Senha" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" title="8 números e letras minus./MAIUS." required/>
                             <label for="cadastro_cad_sen2" class="ui-hidden-accessible">Confirme a senha: </label>
@@ -255,7 +259,7 @@
                 </div>
                 <div data-role="main" class="ui-content">
                     <div class="epeds_frame">
-                        <form id="fecped_pag" onsubmit="return formIntercept(this, form_fecped_pag)">
+                        <form id="fecped_pag" onsubmit="return false">
                             <label for="fecped_pag_valtot">Valor total: R$</label>
                             <input type="text" name="fecped_pag_valtot" id="fecped_pag_valtot" readonly value="4,50"/>
                             <label for="fecped_pag_valpag">Valor pago: R$</label>
@@ -333,7 +337,7 @@
                     <a href="#" data-rel="back" class="ui-btn ui-corner-all ui-icon-delete ui-btn-icon-notext ui-btn-right">Close</a>
                     <h1>Hamburger</h1>
                     <h3>R$ 6,50</h3>
-                    <form id="incped_quant_f" onsubmit="return formIntercept(this, form_incped_quant_f)">
+                    <form id="incped_quant_f" onsubmit="return false">
                         <label for="incped_quant_f_qua" class="ui-hidden-accessible">Quantidade: </label>
                         <input type="number" name="incped_quant_f_qua" id="incped_quant_f_qua" placeholder="Quantidade" required>
                         <label for="incped_quant_f_tot" class="ui-hidden-accessible">Quantidade: </label>
