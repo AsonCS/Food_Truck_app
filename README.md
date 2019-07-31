@@ -1,2 +1,2 @@
-# pri_e_Pedidos_app
-E Pedidos App modo Privado
+# e_Pedidos_app
+E Pedidos App.
